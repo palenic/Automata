@@ -32,5 +32,6 @@ y.add_transition("q0", "1", "q0", "11")
 y.add_transition("q0", "0", "q1", "")
 y.add_transition("q1", "1", "q1", "11")
 y.add_transition("q1", "0", "q0", "0")
-inp = "01100"
+inp = "011000"
 y.run_fsa(inp)
+y.run_fsa("10000")

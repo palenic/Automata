@@ -29,7 +29,10 @@ class Fsa:
             
     def add_states(self, states):
         for i in states:
-            self.states.append(i)
+            self.add_state(i)
+        
+    def add_state(self, state):
+        self.states.append(state)
             
     def add_transition(self, start, inp, end, out):
         #(init, input): final)
@@ -38,15 +41,23 @@ class Fsa:
         else: 
             self.transitions[(start,inp)] = (end, out)
     
-    def run_fsa(self, inp = None):
+    def check_automaton(self):
         if self.initial_state is None:
             print("Please provide an initial state")
-            return -1
-        if self.final_states == []:
+            return False
+        elif self.final_states == []:
             print("Please provide one or more final states")
-            return -1
-        if self.transitions == {}:
+            return False
+        elif self.transitions == {}:
             print("Please provide one or more transitions")
+            return False
+        else:
+            return True
+    
+    
+    def run_fsa(self, inp = None):
+        
+        if self.check_automaton() == False:
             return -1
         if inp is None:
             print("Please provide a input string")
@@ -55,25 +66,45 @@ class Fsa:
         print("Running automaton",self.name,"on input: ", inp)
         self.current_state = self.initial_state
         self.out=[]
+        i = 0
+        L = len(inp)
         #print(self.out)
-        for cmd in inp:
+        while i<L:
+            cmd = inp[i]
             try:
                 current_tr = self.transitions[(self.current_state, cmd)]
-            except KeyError as e:
-                print("No transition is defined for state and input tuple: ", e)
-                return -1
+                i += 1
+            except KeyError:
+                #print("No transition is defined for state and input tuple: ", e)
+                break
             #print(self.transitions[(self.current_state, cmd)])
             self.current_state = current_tr[0]
             self.out.append(current_tr[1])
             #print(self.out)
+            
         print("the final state is: ",self.current_state)
-        if self.current_state in self.final_states:
+        print("output: ", "".join(self.out))
+        if (self.current_state in self.final_states) and (i == L):
             print("The automaton accepts this string")
-            print("output: ", "".join(self.out))
             return 0
         else:
             print("The automaton does not accept this string")
-            print("output: ", "".join(self.out))
             return -1
 
+
+def fsa_from_txt(file, name=""):
+    automaton = Fsa(name)
+    with open(file) as f:
+        states = f.readline().strip()
+        states = states.split(",")
+        #print(states)
+        automaton.add_states(states)
+        start = f.readline().strip()
+        automaton.define_start(start)
+        end = f.readline().strip().split(",")
+        automaton.define_end(end)
+        for line in f.readlines():
+            tr = line.strip().split(",")
+            automaton.add_transition(tr[0],tr[1],tr[2],tr[3])
+        return automaton
 
