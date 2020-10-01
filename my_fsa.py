@@ -104,6 +104,28 @@ def from_txt_helper(automaton, file):
     return automaton
 
 def fsa_from_txt(file, name=""):
+    """
+    Builds a FSA from a configuration file in txt format, structured as follows:
+    first line: all the states separates by commas
+    second line: initial state
+    third line: final states separated by commas
+    following lines: transitions with format: start_state,input,end_state,output
+    
+    IMPORTANT: spaces are not stripped
+
+    Parameters
+    ----------
+    file : string
+        path to the .txt file.
+    name : string, optional
+        Nickname for the automaton. The default is "".
+
+    Returns
+    -------
+    automaton : Fsa
+        An object of class Fsa containing the automaton specified by the states and transitions in the configuration file.
+
+    """
     automaton = Fsa(name)
     automaton = from_txt_helper(automaton, file)
     with open(file) as f:

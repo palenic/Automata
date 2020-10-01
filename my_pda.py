@@ -90,6 +90,31 @@ class Pda(fsa.Fsa):
 
 
 def pda_from_txt(file, name=""):
+    """
+    Builds a PDA from a configuration file in txt format, structured as follows:
+    first line: all the states separates by commas
+    second line: initial state
+    third line: final states separated by commas
+    following lines: transitions with format: start_state, input, pile_read, end_state, pile_action, output
+    
+    input: can be eps to specify an epsilon-move
+    pile_action: any character to append it to the pile, del to delete last character, nothing to keep pile as is
+    
+    IMPORTANT: spaces are not stripped
+
+    Parameters
+    ----------
+    file : string
+        path to the .txt file.
+    name : string, optional
+        Nickname for the automaton. The default is "".
+
+    Returns
+    -------
+    automaton : Pda
+        An object of class Pda containing the automaton specified by the states and transitions in the configuration file.
+
+    """
     automaton = Pda(name)
     automaton = fsa.from_txt_helper(automaton, file)
     with open(file) as f:
