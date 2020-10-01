@@ -91,15 +91,9 @@ class Pda(fsa.Fsa):
 
 def pda_from_txt(file, name=""):
     automaton = Pda(name)
+    automaton = fsa.from_txt_helper(automaton, file)
     with open(file) as f:
-        states = f.readline().strip()
-        states = states.split(",")
-        automaton.add_states(states)
-        start = f.readline().strip()
-        automaton.define_start(start)
-        end = f.readline().strip().split(",")
-        automaton.define_end(end)
-        for line in f.readlines():
+        for line in f.readlines()[3:]:
             tr = line.strip().split(",")
             automaton.add_transition(tr[0],tr[1],tr[2],tr[3],tr[4],tr[5])
         return automaton

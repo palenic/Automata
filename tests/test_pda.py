@@ -38,11 +38,9 @@ class TestBWT(unittest.TestCase):
         inp="aaaabbbb"
         a=x.run_pda(inp)
         self.assertEqual(a,0)
-        self.assertEqual("".join(x.out),"AAAABBBB")
         inp="aaabbbb"
         a=x.run_pda(inp)
         self.assertEqual(a,-1)
-        self.assertEqual("".join(x.out),"AAABBB")
         inp="aaaabbb"
         a=x.run_pda(inp)
         self.assertEqual(a,-1)

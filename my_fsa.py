@@ -91,9 +91,7 @@ class Fsa:
             print("The automaton does not accept this string")
             return -1
 
-
-def fsa_from_txt(file, name=""):
-    automaton = Fsa(name)
+def from_txt_helper(automaton, file):
     with open(file) as f:
         states = f.readline().strip()
         states = states.split(",")
@@ -103,7 +101,13 @@ def fsa_from_txt(file, name=""):
         automaton.define_start(start)
         end = f.readline().strip().split(",")
         automaton.define_end(end)
-        for line in f.readlines():
+    return automaton
+
+def fsa_from_txt(file, name=""):
+    automaton = Fsa(name)
+    automaton = from_txt_helper(automaton, file)
+    with open(file) as f:
+        for line in f.readlines()[3:]:
             tr = line.strip().split(",")
             automaton.add_transition(tr[0],tr[1],tr[2],tr[3])
         return automaton
